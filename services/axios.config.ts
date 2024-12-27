@@ -1,14 +1,16 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import Config from "@env";
+import axios from "axios";
 
-export const config: AxiosRequestConfig = {
-	baseURL: Config.UDEMY_API_URL,
-	timeout: 30000, // 30 seconds
+const $http = axios.create({
+	baseURL: process.env.EXPO_PUBLIC_UDEMY_API_URL,
+	// withCredentials: true,
+	auth: {
+		username: process.env.EXPO_PUBLIC_UDEMY_CLIENT_ID || "",
+		password: process.env.EXPO_PUBLIC_UDEMY_CLIENT_SECRET || "",
+	},
+	timeout: 30000,
 	headers: {
 		"Content-Type": "application/json",
 	},
-};
-
-const $http: AxiosInstance = axios.create(config);
+});
 
 export default $http;
