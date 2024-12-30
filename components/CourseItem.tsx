@@ -3,11 +3,12 @@ import React, { useState } from "react";
 // import Animated, { FadeInDown } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import { useWishlistStore } from "@/store/wishlistStore";
+import { router } from "expo-router";
 
 type CourseItemProps = {
 	course: Course;
 	customStyle?: string;
-	index: number;
+	index?: number;
 };
 
 function CourseItem({ course, customStyle, index }: CourseItemProps) {
@@ -22,7 +23,15 @@ function CourseItem({ course, customStyle, index }: CourseItemProps) {
 	}
 
 	return (
-		<Pressable className={`pt-4 ${customStyle}`}>
+		<Pressable
+			className={`pt-4 ${customStyle}`}
+			onPress={() =>
+				router.push({
+					pathname: "/coursedetails",
+					params: { courseId: course.id },
+				})
+			}
+		>
 			<View
 				className="gap-2 w-full border border-gray-300 overflow-hidden rounded-2xl"
 				// entering={FadeInDown.duration(300)
@@ -32,7 +41,9 @@ function CourseItem({ course, customStyle, index }: CourseItemProps) {
 				<Image source={{ uri: course.image_480x270 }} className="w-full h-40" />
 
 				<View className="px-4 p-2">
-					<Text style={{ fontFamily: "BarlowBold" }}>{course.title}</Text>
+					<Text style={{ fontFamily: "BarlowBold" }} className="text-lg min-h-16">
+						{course.title}
+					</Text>
 					<View className="flex-row items-center justify-between pt-2 pb-4">
 						<Text className="font-bold text-2xl">{`${course.price}`}</Text>
 
