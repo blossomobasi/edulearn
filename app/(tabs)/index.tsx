@@ -24,7 +24,7 @@ const categories: Category[] = [
 
 export default function HomeScreen() {
 	const [selectedCategory, setSelectedCategory] = useState("Business");
-	const { courses, isLoading: isLoadingCourse, error } = useCourse(selectedCategory);
+	const { courses, isLoading, recommendedCourses, error } = useCourse(selectedCategory);
 
 	return (
 		<View className="flex-1 bg-white">
@@ -103,7 +103,7 @@ export default function HomeScreen() {
 					</ScrollView>
 
 					{/* Courses */}
-					{isLoadingCourse ? (
+					{isLoading ? (
 						<View>
 							<ActivityIndicator size="large" color="#1d4ed8" />
 						</View>
@@ -115,7 +115,40 @@ export default function HomeScreen() {
 							data={courses.results}
 							keyExtractor={(item) => item.id.toString()}
 							showsHorizontalScrollIndicator={false}
-							renderItem={({ item }) => CourseItem({ course: item, customStyle: "ml-6", index: item.id })}
+							renderItem={({ item }) => <CourseItem course={item} customStyle="ml-6" index={item.id} />}
+						/>
+					) : (
+						<View className="flex-1 justify-center items-center">
+							<Text>No courses found. Try searching for a different Course.</Text>
+						</View>
+					)}
+
+					{/* Recommended Courses */}
+					<View className="pt-6">
+						<View className="flex-row justify-between items-center px-6 pt-4">
+							<Text className="text-xl" style={{ fontFamily: "BarlowBold" }}>
+								Recommended Courses
+							</Text>
+
+							<Text className="text-blue-700" style={{ fontFamily: "BarlowSemiBold" }}>
+								See More
+							</Text>
+						</View>
+					</View>
+
+					{isLoading ? (
+						<View>
+							<ActivityIndicator size="large" color="#1d4ed8" />
+						</View>
+					) : error ? (
+						<Text>Error: {error.message}</Text>
+					) : recommendedCourses?.results ? (
+						<FlatList
+							horizontal={true}
+							data={recommendedCourses.results}
+							keyExtractor={(item) => item.id.toString()}
+							showsHorizontalScrollIndicator={false}
+							renderItem={({ item }) => <CourseItem course={item} customStyle="ml-6" index={item.id} />}
 						/>
 					) : (
 						<View className="flex-1 justify-center items-center">
